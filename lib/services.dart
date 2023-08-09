@@ -3,7 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseServices {
   final _auth = FirebaseAuth.instance;
-  final _googleSignIn = GoogleSignIn();
+  final _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   signInWithGoogle() async {
    try {

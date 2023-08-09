@@ -12,6 +12,7 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  bool _isSigningIn = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,12 +37,40 @@ class _LogInScreenState extends State<LogInScreen> {
           child: ListView(
             shrinkWrap: true,
             children: [
-              ElevatedButton(onPressed: () async {
-                await FirebaseServices().signInWithGoogle();
-                Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              }, child: const Text('Login with google')),
+              // ElevatedButton(onPressed: () async {
+              //   await FirebaseServices().signInWithGoogle();
+              //   Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => const HomeScreen()),
+              //   );
+              // }, child: const Text('Login with google')),
+
+              ElevatedButton(
+                onPressed: _isSigningIn ? null : () async {
+                  setState(() {
+                    _isSigningIn = true;
+                  });
+
+                  try {
+                    await FirebaseServices().signInWithGoogle();
+                    Navigator.
+                    // push
+                    pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    );
+                  } catch (e) {
+                    // Handle sign-in errors here (if needed)
+                  } finally {
+                    setState(() {
+                      _isSigningIn = false;
+                    });
+                  }
+                },
+                child: _isSigningIn
+                    ? CircularProgressIndicator() // Show the progress indicator
+                    : const Text('Login with Google'),
+              )
+
 
             ],
           ),
